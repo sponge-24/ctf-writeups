@@ -87,4 +87,37 @@ Running the script yields the following output:
 ![Image](images/Picture3.png)
 
 
+## Challenge: Lousy 2FA
+
+### Description
+
+This web challenge centers on bypassing a 2FA OTP (One-Time Password) verification mechanism through an insecure implementation. Initial exploration of the website reveals minimal information, and the visible endpoints appear unhelpful.
+
+![Image](images/Picture4.png)
+
+### Exploration
+
+Inspecting `robots.txt` exposes a disallowed path: `/forgot-password`. Visiting this endpoint presents a basic form to request an OTP via email.
+
+The website also serves static assets, including client-side JavaScript. Reviewing the script reveals the implementation for the `/send-otp` POST request. Interestingly, a commented-out parameter named `length` is accepted along with the email in the request body.
+
+![Image](images/Picture5.png)
+
+### Exploit Steps
+
+1. **Manipulate OTP Length**  
+   By manually adding the `length` field in the request payload, it's possible to specify the desired OTP length.
+   
+   - Testing with `length = 0` or `1` returns an error.
+   - With `length = 2`, the request succeeds.
+   - This reveals the minimum accepted length is 2, dramatically reducing the brute-force space.
+
+2. **Brute-force OTP**  
+   Since the OTP is only two characters long (likely alphanumeric or numeric), brute-forcing becomes trivial.
+
+
+When a correct OTP is submitted to `/verify-otp`, the flag is returned
+
+![Image](images/Picture6.png)
+
 
