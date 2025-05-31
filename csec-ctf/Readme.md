@@ -121,3 +121,39 @@ When a correct OTP is submitted to `/verify-otp`, the flag is returned
 ![Image](images/Picture6.png)
 
 
+Here’s a clean and focused Markdown writeup for the **King's Crossing** OSINT challenge, including a placeholder for an image:
+
+
+## Challenge: King's Crossing
+
+### Description
+
+This is an OSINT (Open Source Intelligence) challenge where the objective is to identify the pin code of a location based on visual clues in an image. A hint provided in the challenge description—**"bad review"**—proved crucial to solving it.
+
+### Analysis
+
+The image showed:
+
+- A textile showroom
+- A bus with the label **"ksrtc"**, indicating it operates in **Karnataka State, India**
+
+Using these details, a targeted search was conducted:
+
+1. Searched **“textile shops in Karnataka”** on Google.
+2. Filtered the results by **lowest reviews** to align with the “bad review” hint.
+3. Manually compared storefront images with the challenge image.
+4. Eventually matched the storefront to **Senthil Kumar Textiles**.
+
+![Image](images/Picture7.png)
+
+The store’s address listed the pin code as: 570004
+
+
+Thus, the flag is:
+
+```
+
+HTB{570004}
+
+```
+
