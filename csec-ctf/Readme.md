@@ -8,7 +8,7 @@ This HackTheBox Discord challenge involves finding a hidden flag through interac
 
 While browsing the available Discord channels, one stands out: a hidden one named `#lame-bot`. Despite being private, it is possible to send messages in it. Reviewing the channel's message history suggests this is the correct location for bot interaction.
 
-![Image](path/to/image.png)
+![Image](csec-ctf/images/Picture1.png)
 
 By typing `/` in the chat, you can explore the available commands under the **Hack The Box** command group. Among them:
 
@@ -17,5 +17,5 @@ By typing `/` in the chat, you can explore the available commands under the **Ha
 
 Using `/random` in `#lame-bot` triggers a response that reveals the flag.
 
-![Image](path/to/image.png)
+![Image](csec-ctf/images/Picture2.png)
 
